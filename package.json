@@ -1,0 +1,15 @@
+{
+  "name": "htmlhint-riot-rules",
+  "version": "0.0.1",
+  "description": "HTMLHint custom rules for Riot.js",
+  "main": "index.js",
+  "keywords": [
+    "htmlhint",
+    "riot"
+  ],
+  "author": "black-trooper",
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^7.1.3"
+  }
+}
