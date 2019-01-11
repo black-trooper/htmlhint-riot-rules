@@ -4,7 +4,10 @@ const glob = require('glob')
 const path = require('path')
 
 const defaultOptions = {
-  'avoid-tag-parent': true
+  'avoid-tag-parent': true,
+  'each-use-in-syntax': true,
+  'script-inside-tag': true,
+  'styles-external-files': true
 }
 
 function loadRule(filepath, options) {
