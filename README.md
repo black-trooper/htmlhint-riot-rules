@@ -14,6 +14,8 @@ npm install htmlhint-riot-rules
 ```
 
 ## Useage
+
+### with [htmlhint-loader](https://github.com/htmlhint/htmlhint-loader)
 ```javascript
 // webpack.config.js
 
@@ -34,6 +36,19 @@ module.exports = {
 }
 ```
 
+
+### with [gulp-htmlhint](https://github.com/bezoerb/gulp-htmlhint)
+```javascript
+// gulp.config.js
+
+var gulp = require('gulp');
+var htmlhint = require("gulp-htmlhint");
+var htmlhintRiotRules = require('htmlhint-riot-rules')
+
+gulp.src("./src/*.tag.html")
+  .pipe(htmlhint('.htmlhintrc', htmlhintRiotRules()))
+```
+
 ## Rules
 |ID|Description|Level|
 |--|-----------|-----|
@@ -45,23 +60,9 @@ You can specify rules to disable with JSON arguments.
 By default all rules are turned on and it is up to you to disable them.
 
 ```javascript
-// webpack.config.js
+var htmlhintRiotRules = require('htmlhint-riot-rules')
 
-const htmlhintRiotRules = require('htmlhint-riot-rules')
-
-module.exports = {
-  module: {
-    rules: [{
-      enforce: 'pre',
-      test: /\.html/,
-      loader: 'htmlhint-loader',
-      exclude: /node_modules/,
-      options: {
-        customRules: htmlhintRiotRules({
-          'avoid-tag-parent': false
-        })
-      }
-    }]
-  }
-}
+var customRules = htmlhintRiotRules({
+  'avoid-tag-parent': false
+})
 ```
