@@ -19,17 +19,18 @@ npm install htmlhint-riot-rules
 ```javascript
 // webpack.config.js
 
-const htmlhintRiotRules = require('htmlhint-riot-rules')
+var htmlhintRiotRules = require('htmlhint-riot-rules')
 
 module.exports = {
   module: {
     rules: [{
       enforce: 'pre',
-      test: /\.html/,
+      test: /\.tag\.html/,
       loader: 'htmlhint-loader',
       exclude: /node_modules/,
       options: {
-        customRules: htmlhintRiotRules()
+        customRules: htmlhintRiotRules(),
+        'avoid-tag-parent': true
       }
     }]
   }
