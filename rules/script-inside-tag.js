@@ -34,9 +34,11 @@ module.exports = {
       if (tagName === rootTag) {
         if (hasScript === false) {
           var lastEvent = event.lastEvent;
-          var blocks = splitBlocks(lastEvent.raw.replace(TRIM_TRAIL, ''))
-          if (isJS(blocks[1])) {
-            reporter.error('Use <script> inside tag.', event.line, event.col, self, event.raw);
+          if (lastEvent.type !== 'tagstart') {
+            var blocks = splitBlocks(lastEvent.raw.replace(TRIM_TRAIL, ''))
+            if (isJS(blocks[1])) {
+              reporter.error('Use <script> inside tag.', event.line, event.col, self, event.raw);
+            }
           }
         }
         parser.removeListener('tagstart', onTagStart);
