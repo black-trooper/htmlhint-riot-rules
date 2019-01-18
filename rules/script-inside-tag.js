@@ -1,4 +1,5 @@
 const id = 'script-inside-tag';
+const esprima = require('esprima');
 
 module.exports = {
   id,
@@ -8,7 +9,6 @@ module.exports = {
     var rootTag = '';
     var hasScript = false;
     var TRIM_TRAIL = /[ \t]+$/gm
-    var END_TAGS = /\/>\n|^<(?:\/?-?[A-Za-z][-\w\xA0-\xFF]*\s*|-?[A-Za-z][-\w\xA0-\xFF]*\s+[-\w:\xA0-\xFF][\S\s]*?)>\n/
     var S_SQ_STR = /'[^'\n\r\\]*(?:\\(?:\r\n?|[\S\s])[^'\n\r\\]*)*'/.source
     var S_R_SRC1 = [
       /\/\*[^*]*\*+(?:[^*/][^*]*\*+)*\//.source,   // multiline comments
@@ -35,8 +35,7 @@ module.exports = {
         if (hasScript === false) {
           var lastEvent = event.lastEvent;
           if (lastEvent.type !== 'tagstart') {
-            var blocks = splitBlocks(lastEvent.raw.replace(TRIM_TRAIL, ''))
-            if (isJS(blocks[1])) {
+            if (isJS(lastEvent.raw.replace(TRIM_TRAIL, ''))) {
               reporter.error('Use <script> inside tag.', event.line, event.col, self, event.raw);
             }
           }
@@ -45,28 +44,8 @@ module.exports = {
         parser.removeListener('tagend', onTagEnd);
       }
     }
-    function splitBlocks(str) {
-      if (/<[-\w]/.test(str)) {
-        var
-          m,
-          k = str.lastIndexOf('<'),
-          n = str.length
-
-        while (k !== -1) {
-          m = str.slice(k, n).match(END_TAGS)
-          if (m) {
-            k += m.index + m[0].length
-            m = str.slice(0, k)
-            if (m.slice(-5) === '<-/>\n') m = m.slice(0, -5) // riot/riot#1966
-            return [m, str.slice(k)]
-          }
-          n = k
-          k = str.lastIndexOf('<', k - 1)
-        }
-      }
-      return ['', str]
-    }
     function isJS(js) {
+      console.log('js:', js)
       if (!/\S/.test(js)) return false
       var re = new RegExp(S_R_SRC1, 'g')
       return re.test(js)
