@@ -1,5 +1,4 @@
 const id = 'script-inside-tag';
-const esprima = require('esprima');
 
 module.exports = {
   id,
@@ -45,7 +44,6 @@ module.exports = {
       }
     }
     function isJS(js) {
-      console.log('js:', js)
       if (!/\S/.test(js)) return false
       var re = new RegExp(S_R_SRC1, 'g')
       return re.test(js)
