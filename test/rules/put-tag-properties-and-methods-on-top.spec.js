@@ -115,6 +115,22 @@ describe('Rules: ' + ruleId, function () {
     expect(messages[0].type).to.be('warning')
   })
 
+  it('Tag methods not after tag declaration and tag properties should result in an error', function () {
+    var code = `<tag><script>
+      var tag = this
+      var text = '';
+      var id = 1;
+    </script></tag>`
+    var messages = HTMLHint.verify(code, ruleOptions)
+    expect(messages.length).to.be(1)
+    expect(messages[0].rule.id).to.be(ruleId)
+    expect(messages[0].message).to.be('Expected declarations to be in order.')
+    expect(messages[0].line).to.be(4)
+    expect(messages[0].col).to.be(6)
+    expect(messages[0].raw).to.be('      var id = 1;')
+    expect(messages[0].type).to.be('warning')
+  })
+
   it('Ruled script should not result in an error', function () {
     var code = `<tag><script>
       var tag = this;
@@ -125,6 +141,7 @@ describe('Rules: ' + ruleId, function () {
       tag.toggle = toggle;
       
       var id = 1, object = {}, text = '';
+      id = 2;
       object.z_index = 1;
 
       function add(event) {

@@ -50,6 +50,15 @@ module.exports = {
     function extractRaw(raw, line) {
       return raw.split(/\r\n|\r|\n/)[line - 1]
     }
+    function extractPropertyName(target) {
+      if (target.type === 'MemberExpression') {
+        if (target.object.type === 'Identifier') {
+          return `${target.object.name}.${target.property.name}`
+        }
+        return `${extractProperty(target.object)}.${target.name}`
+      }
+      return target.name
+    }
     function warn(message, event, body) {
       const line = event.line + body.loc.start.line - 1
       const col = (body.loc.start.line === 1 ? event.col : 0) + body.loc.start.column
@@ -123,17 +132,15 @@ module.exports = {
 
         else if (isProperty(body)) {
           if (isProperty(last)) {
-            if (body.expression.left.object.name < last.expression.left.object.name) {
-              // Alphabetizing
-              warn('Expected properties to be in order.', event, body);
-            }
-            else if (body.expression.left.object.name === last.expression.left.object.name
-              && body.expression.left.property.name < last.expression.left.property.name) {
+            const propertyName = extractPropertyName(body.expression.left)
+            const lastPropertyName = extractPropertyName(last.expression.left)
+            if (propertyName < lastPropertyName) {
               // Alphabetizing
               warn('Expected properties to be in order.', event, body);
             }
           }
-          else if (!isVariable(last) && !isTagMethod(last) && !isTagProperty(last) && !isAssignThisToTag(last)) {
+          else if (!isVariable(last) && !isTagMethod(last) && !isTagProperty(last)
+            && !isAssignThisToTag(last)) {
             warn('Put properties after declarations.', event, body);
           }
         }
@@ -145,7 +152,8 @@ module.exports = {
               warn('Expected functions to be in order.', event, body);
             }
           }
-          else if (!isFunction(last) && !isProperty(last) && !isVariable(last) && !isTagMethod(last) && !isTagProperty(last) && !isAssignThisToTag(last)) {
+          else if (!isFunction(last) && !isProperty(last) && !isVariable(last)
+            && !isTagMethod(last) && !isTagProperty(last) && !isAssignThisToTag(last)) {
             warn('Put functions after properties.', event, body);
           }
         }
