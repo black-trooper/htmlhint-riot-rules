@@ -115,7 +115,7 @@ describe('Rules: ' + ruleId, function () {
     expect(messages[0].type).to.be('warning')
   })
 
-  it('Tag methods not after tag declaration and tag properties should result in an error', function () {
+  it('Declarations not in order should result in an error', function () {
     var code = `<tag><script>
       var tag = this
       var text = '';
@@ -128,6 +128,49 @@ describe('Rules: ' + ruleId, function () {
     expect(messages[0].line).to.be(4)
     expect(messages[0].col).to.be(6)
     expect(messages[0].raw).to.be('      var id = 1;')
+    expect(messages[0].type).to.be('warning')
+  })
+
+  it('Properties not in order should result in an error', function () {
+    var code = `<tag><script>
+      var tag = this
+      var id = 1;
+      var object = {};
+      var text = '';
+      object.data.z_index = 1;
+      object.data.value = 1;
+      text = 'text'
+      id = 2;
+    </script></tag>`
+    var messages = HTMLHint.verify(code, ruleOptions)
+    console.log(messages)
+    expect(messages.length).to.be(2)
+    expect(messages[0].rule.id).to.be(ruleId)
+    expect(messages[0].message).to.be('Expected properties to be in order.')
+    expect(messages[0].line).to.be(7)
+    expect(messages[0].col).to.be(6)
+    expect(messages[0].raw).to.be('      object.data.value = 1;')
+    expect(messages[1].raw).to.be('      id = 2;')
+    expect(messages[0].type).to.be('warning')
+  })
+
+  it('Functions not in order should result in an error', function () {
+    var code = `<tag><script>
+      var tag = this
+      function edit(event) {
+          /* ... */
+      }
+      function add(event) {
+          /* ... */
+      }
+    </script></tag>`
+    var messages = HTMLHint.verify(code, ruleOptions)
+    expect(messages.length).to.be(1)
+    expect(messages[0].rule.id).to.be(ruleId)
+    expect(messages[0].message).to.be('Expected functions to be in order.')
+    expect(messages[0].line).to.be(6)
+    expect(messages[0].col).to.be(6)
+    expect(messages[0].raw).to.be('      function add(event) {')
     expect(messages[0].type).to.be('warning')
   })
 

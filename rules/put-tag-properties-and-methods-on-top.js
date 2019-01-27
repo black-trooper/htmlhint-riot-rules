@@ -55,7 +55,7 @@ module.exports = {
         if (target.object.type === 'Identifier') {
           return `${target.object.name}.${target.property.name}`
         }
-        return `${extractProperty(target.object)}.${target.name}`
+        return `${extractPropertyName(target.object)}.${target.property.name}`
       }
       return target.name
     }
