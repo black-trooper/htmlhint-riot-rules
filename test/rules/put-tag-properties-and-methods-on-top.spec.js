@@ -25,17 +25,21 @@ describe('Rules: ' + ruleId, function () {
   it('Multi line tag method should result in an error', function () {
     var code = `<tag><script>
       var tag = this;
+      tag.add = () => {
+        
+      }
       tag.show = function(){
         return this.message
       }
     </script></tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
-    expect(messages.length).to.be(1)
+    expect(messages.length).to.be(2)
     expect(messages[0].rule.id).to.be(ruleId)
     expect(messages[0].message).to.be('Keeping tag method declaration a one-liner.')
     expect(messages[0].line).to.be(3)
     expect(messages[0].col).to.be(6)
-    expect(messages[0].raw).to.be('      tag.show = function(){')
+    expect(messages[0].raw).to.be('      tag.add = () => {')
+    expect(messages[1].raw).to.be('      tag.show = function(){')
     expect(messages[0].type).to.be('warning')
   })
 
@@ -162,7 +166,6 @@ describe('Rules: ' + ruleId, function () {
       id = 2;
     </script></tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
-    console.log(messages)
     expect(messages.length).to.be(2)
     expect(messages[0].rule.id).to.be(ruleId)
     expect(messages[0].message).to.be('Expected properties to be in order.')
@@ -239,7 +242,6 @@ describe('Rules: ' + ruleId, function () {
       }
     </script></tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
-    console.log(messages)
     expect(messages.length).to.be(0)
   })
 

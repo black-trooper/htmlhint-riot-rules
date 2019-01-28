@@ -35,7 +35,8 @@ module.exports = {
         && body.expression.type === 'AssignmentExpression'
         && body.expression.left.type === 'MemberExpression'
         && body.expression.left.object.name === 'tag'
-        && body.expression.right.type === 'FunctionExpression'
+        && (body.expression.right.type === 'FunctionExpression'
+          || body.expression.right.type === 'ArrowFunctionExpression')
     }
     function isFunction(body) {
       return body.type === 'FunctionDeclaration'
