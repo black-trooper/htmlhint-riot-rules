@@ -131,6 +131,25 @@ describe('Rules: ' + ruleId, function () {
     expect(messages[0].type).to.be('warning')
   })
 
+  it('Declarations not after tag properties and tag methods should result in an error', function () {
+    var code = `<tag><script>
+      var tag = this
+      tag.add = add;
+      function add(event) {
+        /* ... */
+      }
+      var id = 1;
+    </script></tag>`
+    var messages = HTMLHint.verify(code, ruleOptions)
+    expect(messages.length).to.be(1)
+    expect(messages[0].rule.id).to.be(ruleId)
+    expect(messages[0].message).to.be('Put declarations after tag properties and tag methods.')
+    expect(messages[0].line).to.be(7)
+    expect(messages[0].col).to.be(6)
+    expect(messages[0].raw).to.be('      var id = 1;')
+    expect(messages[0].type).to.be('warning')
+  })
+
   it('Properties not in order should result in an error', function () {
     var code = `<tag><script>
       var tag = this
@@ -151,6 +170,26 @@ describe('Rules: ' + ruleId, function () {
     expect(messages[0].col).to.be(6)
     expect(messages[0].raw).to.be('      object.data.value = 1;')
     expect(messages[1].raw).to.be('      id = 2;')
+    expect(messages[0].type).to.be('warning')
+  })
+
+  it('Properties not after declarations should result in an error', function () {
+    var code = `<tag><script>
+      var tag = this
+      tag.add = add;
+      var id = 1;
+      function add(event) {
+        /* ... */
+      }
+      id = 2;
+    </script></tag>`
+    var messages = HTMLHint.verify(code, ruleOptions)
+    expect(messages.length).to.be(1)
+    expect(messages[0].rule.id).to.be(ruleId)
+    expect(messages[0].message).to.be('Put properties after declarations.')
+    expect(messages[0].line).to.be(8)
+    expect(messages[0].col).to.be(6)
+    expect(messages[0].raw).to.be('      id = 2;')
     expect(messages[0].type).to.be('warning')
   })
 

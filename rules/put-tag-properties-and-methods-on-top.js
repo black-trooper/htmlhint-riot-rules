@@ -126,7 +126,7 @@ module.exports = {
             }
           }
           else if (!isTagMethod(last) && !isTagProperty(last) && !isAssignThisToTag(last)) {
-            warn('Put declarations after tag properties and methods.', event, body);
+            warn('Put declarations after tag properties and tag methods.', event, body);
           }
         }
 
@@ -151,10 +151,6 @@ module.exports = {
               // Alphabetizing
               warn('Expected functions to be in order.', event, body);
             }
-          }
-          else if (!isFunction(last) && !isProperty(last) && !isVariable(last)
-            && !isTagMethod(last) && !isTagProperty(last) && !isAssignThisToTag(last)) {
-            warn('Put functions after properties.', event, body);
           }
         }
 
