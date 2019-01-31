@@ -7,10 +7,19 @@ module.exports = {
   init: function (parser, reporter, options) {
     var self = this;
     const regex = /\{.*opts.*?\}/;
-    function isProperty(body) {
+    function isAssignmentByOpts(body) {
       return body.type === 'ExpressionStatement'
         && body.expression.type === 'AssignmentExpression'
-        && body.expression.left.type === 'Identifier'
+        && body.expression.right.type === 'MemberExpression'
+        && body.expression.right.object.name === 'opts'
+    }
+    function isDeclarationInitByOpts(body) {
+      return body.type === 'VariableDeclaration'
+        && body.declarations.some(declaration => {
+          return declaration.type === 'VariableDeclarator'
+            && declaration.init.type === 'MemberExpression'
+            && declaration.init.object.name === 'opts'
+        })
     }
     function extractRaw(raw, line) {
       return raw.split(/\r\n|\r|\n/)[line - 1]
@@ -37,6 +46,17 @@ module.exports = {
       if (regex.test(event.raw) === true) {
         reporter.warn('Use defaults for option values. e.g.) tag.xxx = opts.xxx || \'defaults\'.', event.line, event.col, self, event.raw);
       }
+    });
+    parser.addListener('cdata', function (event) {
+      if (event.tagName.toLowerCase() !== 'script') {
+        return
+      }
+      const code = event.raw.replace(/\t/g, ' ');
+      const ast = esprima.parse(code, { loc: true })
+
+      ast.body.filter(body => isAssignmentByOpts(body) || isDeclarationInitByOpts(body)).forEach(body => {
+        warn('Use defaults for option values. e.g.) tag.xxx = opts.xxx || \'defaults\'.', event, body.loc.start.line, body.loc.start.column)
+      })
     });
   }
 }
