@@ -6,7 +6,7 @@ module.exports = {
   description: 'Harness your tag options.',
   init: function (parser, reporter, options) {
     var self = this;
-    const regex = /\{.*opts.*?\}/;
+    const regex = /{.*opts.*?}/;
     function isAssignmentByOpts(body) {
       return body.type === 'ExpressionStatement'
         && body.expression.type === 'AssignmentExpression'
