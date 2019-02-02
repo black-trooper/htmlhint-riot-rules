@@ -14,6 +14,9 @@ module.exports = {
         attr = attrs[i];
 
         if (regex.test(attr.value) === true) {
+          if (attrs.some(attr => attr.name === 'each') && /\{.*parent.parent.*?\}/.test(attr.value) === false) {
+            return
+          }
           reporter.warn('The attribute [ ' + attr.name + ' ] must avoid tag.parent.', event.line, col + attr.index, self, attr.raw);
         }
       }
