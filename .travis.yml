@@ -7,3 +7,5 @@ deploy:
   on:
     tags: true
   api_key: $NPM_TOKEN
+after_success:
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
