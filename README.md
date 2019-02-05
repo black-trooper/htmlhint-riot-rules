@@ -30,7 +30,16 @@ module.exports = {
       exclude: /node_modules/,
       options: {
         customRules: htmlhintRiotRules(),
-        'avoid-tag-parent': true
+        'file-line-limit': 100,
+        'tag-name-include-hyphen': true,
+        'use-script-inside-tag': true,
+        'tag-expressions-simple': true,
+        'tag-options-primitive': true,
+        'assign-this-to-tag': true,
+        'properties-and-methods-order': true,
+        'fake-es6-syntax-disabled': true,
+        'tag-parent-disabled': true,
+        'use-each-in-syntax': true
       }
     }]
   }
@@ -53,7 +62,16 @@ gulp.src("./src/*.tag.html")
 ## Rules
 |ID|Description|Level|
 |--|-----------|-----|
-|avoid-tag-parent|[Avoid tag.parent](https://github.com/voorhoede/riotjs-style-guide#avoid-tagparent)|warn|
+|file-line-limit|[Module based development](https://github.com/voorhoede/riotjs-style-guide#module-based-development)|warn|
+|tag-name-include-hyphen|[Tag module names](https://github.com/voorhoede/riotjs-style-guide#tag-module-names)|warn|
+|use-script-inside-tag|[Use <script> inside tag](https://github.com/voorhoede/riotjs-style-guide#use-script-inside-tag)|warn|
+|tag-expressions-simple|[Keep tag expressions simple](https://github.com/voorhoede/riotjs-style-guide#keep-tag-expressions-simple)|warn|
+|tag-options-primitive|[Keep tag options primitive](https://github.com/voorhoede/riotjs-style-guide#keep-tag-options-primitive)|warn|
+|assign-this-to-tag|[Assign this to tag](https://github.com/voorhoede/riotjs-style-guide#assign-this-to-tag)|warn|
+|properties-and-methods-order|[Put tag properties and methods on top](https://github.com/voorhoede/riotjs-style-guide#put-tag-properties-and-methods-on-top)|warn|
+|fake-es6-syntax-disabled|[Avoid fake ES6 syntax](https://github.com/voorhoede/riotjs-style-guide#avoid-fake-es6-syntax)|warn|
+|tag-parent-disabled|[Avoid `tag.parent`](https://github.com/voorhoede/riotjs-style-guide#avoid-tagparent)|warn|
+|use-each-in-syntax|[Use `each ... in` syntax](https://github.com/voorhoede/riotjs-style-guide#use-each--in-syntax)|warn|
 
 
 ## Options
