@@ -1,25 +1,26 @@
-const id = 'module-size';
+const id = 'tag-name-include-hyphen';
 
 module.exports = {
   id,
-  description: 'Always construct your app out of small modules which do one thing and do it well.',
+  description: 'Custom element spec compliant. (include a hyphen, don\'t use reserved names.) \'app\'- namespaced',
   init: function (parser, reporter, options) {
     const self = this;
+    const regex = /-/;
     let rootTag = '';
-    let limit = options > 1 ? options : 100
 
     function onTagStart(event) {
       var tagName = event.tagName.toLowerCase();
       if (rootTag === '') {
         rootTag = tagName;
+        if (!regex.test(rootTag)) {
+          reporter.error('Not custom element spec compliant. Include a hyphen.  \'app\'- namespaced.', event.line, event.col, self, event.raw);
+        }
+
       }
     }
     function onTagEnd(event) {
       var tagName = event.tagName.toLowerCase();
       if (tagName === rootTag) {
-        if (limit < event.line) {
-          reporter.warn('Module size limit ', event.line, event.col, self, event.raw);
-        }
         parser.removeListener('tagstart', onTagStart);
         parser.removeListener('tagend', onTagEnd);
       }

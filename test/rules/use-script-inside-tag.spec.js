@@ -1,7 +1,7 @@
 var expect = require('expect.js')
 var HTMLHint = require('htmlhint').HTMLHint
 
-var ruleId = 'script-inside-tag'
+var ruleId = 'use-script-inside-tag'
 var ruleOptions = {}
 ruleOptions[ruleId] = true
 HTMLHint.addRule(require(`../../rules/${ruleId}.js`))

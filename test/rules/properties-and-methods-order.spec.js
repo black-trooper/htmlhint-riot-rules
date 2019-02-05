@@ -1,7 +1,7 @@
 var expect = require('expect.js')
 var HTMLHint = require('htmlhint').HTMLHint
 
-var ruleId = 'put-tag-properties-and-methods-on-top'
+var ruleId = 'properties-and-methods-order'
 var ruleOptions = {}
 ruleOptions[ruleId] = true
 HTMLHint.addRule(require(`../../rules/${ruleId}.js`))

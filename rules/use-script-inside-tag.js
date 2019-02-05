@@ -1,4 +1,4 @@
-const id = 'script-inside-tag';
+const id = 'use-script-inside-tag';
 
 module.exports = {
   id,

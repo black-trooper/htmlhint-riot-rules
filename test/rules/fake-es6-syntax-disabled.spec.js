@@ -1,7 +1,7 @@
 var expect = require('expect.js')
 var HTMLHint = require('htmlhint').HTMLHint
 
-var ruleId = 'avoid-fake-es6-syntax'
+var ruleId = 'fake-es6-syntax-disabled'
 var ruleOptions = {}
 ruleOptions[ruleId] = true
 HTMLHint.addRule(require(`../../rules/${ruleId}.js`))

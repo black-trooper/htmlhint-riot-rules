@@ -1,4 +1,4 @@
-const id = 'keep-tag-expressions-simple';
+const id = 'tag-expressions-simple';
 const esprima = require('esprima');
 
 module.exports = {

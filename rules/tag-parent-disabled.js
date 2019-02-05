@@ -1,4 +1,4 @@
-const id = 'avoid-tag-parent';
+const id = 'tag-parent-disabled';
 
 module.exports = {
   id,

@@ -1,7 +1,7 @@
 var expect = require('expect.js')
 var HTMLHint = require('htmlhint').HTMLHint
 
-var ruleId = 'keep-tag-expressions-simple'
+var ruleId = 'tag-expressions-simple'
 var ruleOptions = {}
 ruleOptions[ruleId] = true
 HTMLHint.addRule(require(`../../rules/${ruleId}.js`))

@@ -1,4 +1,4 @@
-const id = 'each-use-in-syntax';
+const id = 'use-each-in-syntax';
 
 module.exports = {
   id,

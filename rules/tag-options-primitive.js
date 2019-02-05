@@ -1,4 +1,4 @@
-const id = 'keep-tag-options-primitive';
+const id = 'tag-options-primitive';
 const esprima = require('esprima');
 
 module.exports = {

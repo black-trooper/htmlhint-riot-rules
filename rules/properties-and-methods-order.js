@@ -1,4 +1,4 @@
-const id = 'put-tag-properties-and-methods-on-top'
+const id = 'properties-and-methods-order'
 const esprima = require('esprima');
 
 module.exports = {
