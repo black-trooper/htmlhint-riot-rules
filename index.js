@@ -4,10 +4,16 @@ const glob = require('glob')
 const path = require('path')
 
 const defaultOptions = {
-  'avoid-tag-parent': true,
-  'each-use-in-syntax': true,
-  'script-inside-tag': true,
-  'styles-external-files': true
+  'file-line-limit': 100,
+  'tag-name-include-hyphen': true,
+  'use-script-inside-tag': true,
+  'tag-expressions-simple': true,
+  'tag-options-primitive': true,
+  'assign-this-to-tag': true,
+  'properties-and-methods-order': true,
+  'fake-es6-syntax-disabled': true,
+  'tag-parent-disabled': true,
+  'use-each-in-syntax': true
 }
 
 function loadRule(filepath, options) {
