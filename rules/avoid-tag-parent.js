@@ -5,7 +5,7 @@ module.exports = {
   description: 'Avoid tag.parent.',
   init: function (parser, reporter) {
     var self = this;
-    var regex = /\{.*parent.*?\}/;
+    var regex = /\{.*parent\..*?\}/;
     parser.addListener('tagstart', function (event) {
       var attrs = event.attrs,
         attr,

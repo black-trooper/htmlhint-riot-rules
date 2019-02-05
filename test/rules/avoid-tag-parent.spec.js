@@ -44,13 +44,13 @@ describe('Rules: ' + ruleId, function () {
   })
 
   it('None parent attribute value should not result in an error', function () {
-    var code = '<tag><p value="{ item }"></p></tag>'
+    var code = '<tag><p value="{ parentItem }"></p></tag>'
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(0)
   })
 
   it('None parent text should not result in an error', function () {
-    var code = '<tag><p>{ item }</p></tag>'
+    var code = '<tag><p>{ parentItem }</p></tag>'
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(0)
   })
