@@ -63,8 +63,8 @@ gulp.src("./src/*.tag.html")
 |ID|Description|Level|
 |--|-----------|-----|
 |file-line-limit|[Module based development](https://github.com/voorhoede/riotjs-style-guide#module-based-development)|warn|
-|tag-name-include-hyphen|[Tag module names](https://github.com/voorhoede/riotjs-style-guide#tag-module-names)|warn|
-|use-script-inside-tag|[Use <script> inside tag](https://github.com/voorhoede/riotjs-style-guide#use-script-inside-tag)|warn|
+|tag-name-include-hyphen|[Tag module names](https://github.com/voorhoede/riotjs-style-guide#tag-module-names)|error|
+|use-script-inside-tag|[Use <script> inside tag](https://github.com/voorhoede/riotjs-style-guide#use-script-inside-tag)|error|
 |tag-expressions-simple|[Keep tag expressions simple](https://github.com/voorhoede/riotjs-style-guide#keep-tag-expressions-simple)|warn|
 |tag-options-primitive|[Keep tag options primitive](https://github.com/voorhoede/riotjs-style-guide#keep-tag-options-primitive)|warn|
 |assign-this-to-tag|[Assign this to tag](https://github.com/voorhoede/riotjs-style-guide#assign-this-to-tag)|warn|
