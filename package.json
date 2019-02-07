@@ -5,13 +5,24 @@
   "main": "index.js",
   "keywords": [
     "htmlhint",
+    "riotjs",
     "riot"
   ],
   "scripts": {
     "test": "istanbul cover _mocha test/**/*.spec.js"
   },
-  "author": "black-trooper",
+  "author": {
+    "name": "black-trooper",
+    "url": "https://github.com/black-trooper/htmlhint-riot-rules/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/black-trooper/htmlhint-riot-rules.git"
+  },
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/black-trooper/htmlhint-riot-rules/issues"
+  },
   "devDependencies": {
     "coveralls": "^3.0.2",
     "expect.js": "^0.3.1",
