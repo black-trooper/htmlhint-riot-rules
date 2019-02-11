@@ -74,6 +74,7 @@ describe('Rules: ' + ruleId, function () {
     var code = `<tag>
     <ul><li each="{ item in items }">{ item }</li></ul>
     <script>
+      import addDays from 'date-fns/add_days'
       this.items = opts.items || [];
     </script></tag>`
     var messages = HTMLHint.verify(code, ruleOptions)

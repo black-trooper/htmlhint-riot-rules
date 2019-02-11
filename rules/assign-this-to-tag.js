@@ -41,7 +41,7 @@ module.exports = {
       if (!hasThisToken(code)) {
         return
       }
-      const ast = esprima.parse(code)
+      const ast = esprima.parseModule(code)
       if (ast.type !== 'Program') {
         return
       }

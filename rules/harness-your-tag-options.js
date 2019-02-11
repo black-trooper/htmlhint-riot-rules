@@ -52,7 +52,7 @@ module.exports = {
         return
       }
       const code = event.raw.replace(/\t/g, ' ');
-      const ast = esprima.parse(code, { loc: true })
+      const ast = esprima.parseModule(code, { loc: true })
 
       ast.body.filter(body => isAssignmentByOpts(body) || isDeclarationInitByOpts(body)).forEach(body => {
         warn('Use defaults for option values. e.g.) tag.xxx = opts.xxx || \'defaults\'.', event, body.loc.start.line, body.loc.start.column)

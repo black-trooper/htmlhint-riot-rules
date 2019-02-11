@@ -65,7 +65,7 @@ module.exports = {
         return
       }
       const code = event.raw.replace(/\t/g, ' ');
-      const ast = esprima.parse(code, { loc: true })
+      const ast = esprima.parseModule(code, { loc: true })
       if (ast.type !== 'Program') {
         return
       }

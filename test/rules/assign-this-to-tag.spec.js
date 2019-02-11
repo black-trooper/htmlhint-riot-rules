@@ -56,6 +56,7 @@ describe('Rules: ' + ruleId, function () {
   })
   it('Assign this to tag should not result in an error', function () {
     var code = `<tag><script>
+        import addDays from 'date-fns/add_days'
         const tag = this;
         const date = new Date()
         tag.message = "today is " + date

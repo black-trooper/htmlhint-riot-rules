@@ -38,6 +38,7 @@ describe('Rules: ' + ruleId, function () {
 
   it('Ruled script should not result in an error', function () {
     var code = `<tag><script>
+      import addDays from 'date-fns/add_days'
       var tag = this;
       tag.text = '';
       tag.todos = [];

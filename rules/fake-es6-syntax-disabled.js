@@ -30,7 +30,7 @@ module.exports = {
       const code = event.raw.replace(/\t/g, ' ');
 
       try {
-        const ast = esprima.parse(code, { loc: true })
+        const ast = esprima.parseModule(code, { loc: true })
         const declarations = ast.body.filter(body => isVariable(body)).reduce((acc, body) => acc.concat(body.declarations.map(declaration => declaration.id.name)), []);
 
         ast.body.filter(body => isProperty(body)).forEach(body => {

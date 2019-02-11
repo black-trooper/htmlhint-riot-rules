@@ -51,6 +51,7 @@ describe('Rules: ' + ruleId, function () {
 
   it('Add primitive option to script should not result in an error', function () {
     var code = `<tag><script>
+      import addDays from 'date-fns/add_days'
       let id = opts.id
       let text = ''
       let name = text
