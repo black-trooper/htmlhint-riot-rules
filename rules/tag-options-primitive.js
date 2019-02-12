@@ -29,6 +29,9 @@ module.exports = {
       })
     }
     function extractPropertyName(target) {
+      if (target.object.type === 'CallExpression') {
+        return ''
+      }
       if (target.object.type === 'Identifier') {
         return `${target.object.name}.${target.property.name}`
       }

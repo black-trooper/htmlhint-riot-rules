@@ -59,6 +59,8 @@ describe('Rules: ' + ruleId, function () {
         import addDays from 'date-fns/add_days'
         const tag = this;
         const date = new Date()
+        const version = require('../package.json').version;
+
         tag.message = "today is " + date
         tag.show = function(){
           return this.message

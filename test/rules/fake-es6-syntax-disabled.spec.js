@@ -47,6 +47,7 @@ describe('Rules: ' + ruleId, function () {
       tag.toggle = toggle;
       
       var id = 1, object = {}, text = '';
+      const version = require('../package.json').version;
       id = 2;
       object.z_index = 1;
 

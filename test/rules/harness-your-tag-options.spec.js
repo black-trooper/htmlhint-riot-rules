@@ -75,6 +75,7 @@ describe('Rules: ' + ruleId, function () {
     <ul><li each="{ item in items }">{ item }</li></ul>
     <script>
       import addDays from 'date-fns/add_days'
+      const version = require('../package.json').version;
       this.items = opts.items || [];
     </script></tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
