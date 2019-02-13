@@ -6,6 +6,10 @@ module.exports = {
   description: 'Put tag properties and methods on top',
   init: function (parser, reporter, options) {
     var self = this;
+    const defaultOptions = {
+      alphabetize: true
+    }
+    options = Object.assign(defaultOptions, options)
     function isAssignThisToTag(body) {
       return body.type === 'VariableDeclaration'
         && body.declarations.length == 1
@@ -132,7 +136,7 @@ module.exports = {
 
         if (isImport(body)) {
           if (isImport(last)) {
-            if (body.source.value < last.source.value) {
+            if (options.alphabetize && body.source.value < last.source.value) {
               // Alphabetizing
               warn('Import sources within a group must be alphabetized.', event, body);
             }
@@ -150,7 +154,7 @@ module.exports = {
 
         else if (isTagProperty(body)) {
           if (isTagProperty(last)) {
-            if (body.expression.left.property.name < last.expression.left.property.name) {
+            if (options.alphabetize && body.expression.left.property.name < last.expression.left.property.name) {
               // Alphabetizing
               warn('Tag properties must be alphabetized.', event, body);
             }
@@ -162,7 +166,7 @@ module.exports = {
 
         else if (isTagMethod(body)) {
           if (isTagMethod(last)) {
-            if (extractMethodName(body) < extractMethodName(last)) {
+            if (options.alphabetize && extractMethodName(body) < extractMethodName(last)) {
               // Alphabetize
               warn('Tag methods must be alphabetized.', event, body);
             }
@@ -174,7 +178,7 @@ module.exports = {
 
         else if (isVariable(body)) {
           if (isVariable(last)) {
-            if (body.declarations[0].id.name < last.declarations[0].id.name) {
+            if (options.alphabetize && body.declarations[0].id.name < last.declarations[0].id.name) {
               // Alphabetizing
               warn('Declarations must be alphabetized.', event, body);
             }
@@ -188,7 +192,7 @@ module.exports = {
           if (isProperty(last)) {
             const propertyName = extractPropertyName(body.expression.left ? body.expression.left : body.expression.callee)
             const lastPropertyName = extractPropertyName(last.expression.left ? last.expression.left : last.expression.callee)
-            if (propertyName < lastPropertyName) {
+            if (options.alphabetize && propertyName < lastPropertyName) {
               // Alphabetizing
               warn('Properties must be alphabetized.', event, body);
             }
@@ -201,7 +205,7 @@ module.exports = {
 
         else if (isFunction(body)) {
           if (isFunction(last)) {
-            if (body.id.name < last.id.name) {
+            if (options.alphabetize && body.id.name < last.id.name) {
               // Alphabetizing
               warn('Functions must be alphabetized.', event, body);
             }

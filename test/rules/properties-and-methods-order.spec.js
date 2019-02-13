@@ -331,7 +331,6 @@ describe('Rules: ' + ruleId, function () {
       }
     </script></tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
-    console.log(messages)
     expect(messages.length).to.be(0)
   })
 
