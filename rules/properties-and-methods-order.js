@@ -21,7 +21,7 @@ module.exports = {
       return body.type === 'ExpressionStatement'
         && body.expression.type === 'AssignmentExpression'
         && body.expression.left.type === 'MemberExpression'
-        && body.expression.left.object.name === 'tag'
+        && (body.expression.left.object.name === 'tag' || body.expression.left.object.type === 'ThisExpression')
         && (body.expression.right.type === 'Literal'
           || body.expression.right.type === 'ArrayExpression'
           || body.expression.right.type === 'ObjectExpression')
@@ -30,14 +30,21 @@ module.exports = {
       return body.type === 'ExpressionStatement'
         && body.expression.type === 'AssignmentExpression'
         && body.expression.left.type === 'MemberExpression'
-        && body.expression.left.object.name === 'tag'
+        && (body.expression.left.object.name === 'tag' || body.expression.left.object.type === 'ThisExpression')
         && body.expression.right.type === 'Identifier'
+        || isTagCallExpression(body)
+    }
+    function isTagCallExpression(body) {
+      return body.type === 'ExpressionStatement'
+        && body.expression.type === 'CallExpression'
+        && body.expression.callee.type === 'MemberExpression'
+        && (body.expression.callee.object.name === 'tag' || body.expression.callee.object.type === 'ThisExpression')
     }
     function isMultiLinerTagMethod(body) {
       return body.type === 'ExpressionStatement'
         && body.expression.type === 'AssignmentExpression'
         && body.expression.left.type === 'MemberExpression'
-        && body.expression.left.object.name === 'tag'
+        && (body.expression.left.object.name === 'tag' || body.expression.left.object.type === 'ThisExpression')
         && (body.expression.right.type === 'FunctionExpression'
           || body.expression.right.type === 'ArrowFunctionExpression')
     }
@@ -48,11 +55,39 @@ module.exports = {
       return body.type === 'VariableDeclaration' && !isAssignThisToTag(body)
     }
     function isProperty(body) {
-      return !isVariable(body) && !isFunction(body)
-        && !isTagProperty(body) && !isTagMethod(body) && !isAssignThisToTag(body)
+      return isIdentifierProperty(body) || isMemberProperty(body) || isCallExpression(body)
+    }
+    function isIdentifierProperty(body) {
+      return body.type === 'ExpressionStatement'
+        && body.expression.type === 'AssignmentExpression'
+        && body.expression.left.type === 'Identifier'
+        && (body.expression.right.type === 'Literal'
+          || body.expression.right.type === 'ArrayExpression'
+          || body.expression.right.type === 'ObjectExpression')
+    }
+    function isMemberProperty(body) {
+      return body.type === 'ExpressionStatement'
+        && body.expression.type === 'AssignmentExpression'
+        && body.expression.left.type === 'MemberExpression'
+        && body.expression.left.object.name !== 'tag'
+        && (body.expression.right.type === 'Literal'
+          || body.expression.right.type === 'ArrayExpression'
+          || body.expression.right.type === 'ObjectExpression')
+    }
+    function isCallExpression(body) {
+      return body.type === 'ExpressionStatement'
+        && body.expression.type === 'CallExpression'
+        && body.expression.callee.type === 'MemberExpression'
+        && (body.expression.callee.object.name !== 'tag' && body.expression.callee.object.type !== 'ThisExpression')
     }
     function extractRaw(raw, line) {
       return raw.split(/\r\n|\r|\n/)[line - 1]
+    }
+    function extractMethodName(body) {
+      if (body.expression.type === 'CallExpression') {
+        return body.expression.callee.property.name
+      }
+      return body.expression.left.property.name
     }
     function extractPropertyName(target) {
       if (target.type === 'MemberExpression') {
@@ -120,14 +155,14 @@ module.exports = {
               warn('Tag properties must be alphabetized.', event, body);
             }
           }
-          else if (!isAssignThisToTag(last)) {
+          else if (!isAssignThisToTag(last) && !isImport(last)) {
             warn('Put tag properties after tag declaration.', event, body);
           }
         }
 
         else if (isTagMethod(body)) {
           if (isTagMethod(last)) {
-            if (body.expression.left.property.name < last.expression.left.property.name) {
+            if (extractMethodName(body) < extractMethodName(last)) {
               // Alphabetize
               warn('Tag methods must be alphabetized.', event, body);
             }
@@ -151,8 +186,8 @@ module.exports = {
 
         else if (isProperty(body)) {
           if (isProperty(last)) {
-            const propertyName = extractPropertyName(body.expression.left)
-            const lastPropertyName = extractPropertyName(last.expression.left)
+            const propertyName = extractPropertyName(body.expression.left ? body.expression.left : body.expression.callee)
+            const lastPropertyName = extractPropertyName(last.expression.left ? last.expression.left : last.expression.callee)
             if (propertyName < lastPropertyName) {
               // Alphabetizing
               warn('Properties must be alphabetized.', event, body);

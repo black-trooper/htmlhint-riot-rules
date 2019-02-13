@@ -247,6 +247,51 @@ describe('Rules: ' + ruleId, function () {
     expect(messages[0].type).to.be('warning')
   })
 
+  it('Ruled script without tag declaration should not result in an error', function () {
+    var code = `<tag><script>
+      import addDays from 'date-fns/add_days'
+      import addMonths from 'date-fns/add_months'
+      this.text = '';
+      this.todos = [];
+      this.add = add;
+      this.edit = edit;
+      this.on('mount', onMount);
+      this.toggle = toggle;
+      
+      var id = 1, object = {}, text = [];
+      const version = require('../package.json').version;
+      id = 2;
+      object = {}
+      object.member = {};
+      object.text = [];
+      object.z_index = 1;
+      obseriot.on('routing', onRouting);
+      text = [1];
+
+      function add(event) {
+          /* ... */
+      }
+
+      function edit(event) {
+          /* ... */
+      }
+
+      function onMount(event) {
+          /* ... */
+      }
+
+      function onRouting(content) {
+          /* ... */
+      }
+
+      function toggle(event) {
+          /* ... */
+      }
+    </script></tag>`
+    var messages = HTMLHint.verify(code, ruleOptions)
+    expect(messages.length).to.be(0)
+  })
+
   it('Ruled script should not result in an error', function () {
     var code = `<tag><script>
       import addDays from 'date-fns/add_days'
@@ -256,18 +301,28 @@ describe('Rules: ' + ruleId, function () {
       tag.todos = [];
       tag.add = add;
       tag.edit = edit;
+      tag.on('mount', onMount);
       tag.toggle = toggle;
       
       var id = 1, object = {}, text = '';
       const version = require('../package.json').version;
       id = 2;
       object.z_index = 1;
+      obseriot.on('routing', onRouting);
 
       function add(event) {
           /* ... */
       }
 
       function edit(event) {
+          /* ... */
+      }
+
+      function onMount(event) {
+          /* ... */
+      }
+
+      function onRouting(content) {
           /* ... */
       }
 
