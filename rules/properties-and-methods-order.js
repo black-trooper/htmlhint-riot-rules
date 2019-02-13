@@ -14,6 +14,9 @@ module.exports = {
         && body.declarations[0].id.name === 'tag'
         && body.declarations[0].init.type === 'ThisExpression'
     }
+    function isImport(body) {
+      return body.type === 'ImportDeclaration'
+    }
     function isTagProperty(body) {
       return body.type === 'ExpressionStatement'
         && body.expression.type === 'AssignmentExpression'
@@ -80,9 +83,6 @@ module.exports = {
       if (ast.body.length === 0) {
         return
       }
-      if (!isAssignThisToTag(ast.body[0])) {
-        warn('Put tag declaration on top.', event, ast.body[0]);
-      }
 
       let last
       ast.body.forEach(body => {
@@ -95,11 +95,29 @@ module.exports = {
           return
         }
 
-        if (isTagProperty(body)) {
+        if (isImport(body)) {
+          if (isImport(last)) {
+            if (body.source.value < last.source.value) {
+              // Alphabetizing
+              warn('Import sources within a group must be alphabetized.', event, body);
+            }
+          }
+          else {
+            warn('Put import declarations to top.', event, body);
+          }
+        }
+
+        else if (isAssignThisToTag(body)) {
+          if (!isImport(last)) {
+            warn('Put tag declaration on top or after import declarations.', event, body);
+          }
+        }
+
+        else if (isTagProperty(body)) {
           if (isTagProperty(last)) {
             if (body.expression.left.property.name < last.expression.left.property.name) {
               // Alphabetizing
-              warn('Expected tag properties to be in order.', event, body);
+              warn('Tag properties must be alphabetized.', event, body);
             }
           }
           else if (!isAssignThisToTag(last)) {
@@ -111,7 +129,7 @@ module.exports = {
           if (isTagMethod(last)) {
             if (body.expression.left.property.name < last.expression.left.property.name) {
               // Alphabetize
-              warn('Expected tag methods to be in order.', event, body);
+              warn('Tag methods must be alphabetized.', event, body);
             }
           }
           else if (!isTagProperty(last) && !isAssignThisToTag(last)) {
@@ -123,7 +141,7 @@ module.exports = {
           if (isVariable(last)) {
             if (body.declarations[0].id.name < last.declarations[0].id.name) {
               // Alphabetizing
-              warn('Expected declarations to be in order.', event, body);
+              warn('Declarations must be alphabetized.', event, body);
             }
           }
           else if (!isTagMethod(last) && !isTagProperty(last) && !isAssignThisToTag(last)) {
@@ -137,7 +155,7 @@ module.exports = {
             const lastPropertyName = extractPropertyName(last.expression.left)
             if (propertyName < lastPropertyName) {
               // Alphabetizing
-              warn('Expected properties to be in order.', event, body);
+              warn('Properties must be alphabetized.', event, body);
             }
           }
           else if (!isVariable(last) && !isTagMethod(last) && !isTagProperty(last)
@@ -150,7 +168,7 @@ module.exports = {
           if (isFunction(last)) {
             if (body.id.name < last.id.name) {
               // Alphabetizing
-              warn('Expected functions to be in order.', event, body);
+              warn('Functions must be alphabetized.', event, body);
             }
           }
         }

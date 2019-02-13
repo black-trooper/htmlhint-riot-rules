@@ -15,10 +15,10 @@ describe('Rules: ' + ruleId, function () {
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(1)
     expect(messages[0].rule.id).to.be(ruleId)
-    expect(messages[0].message).to.be('Put tag declaration on top.')
-    expect(messages[0].line).to.be(2)
+    expect(messages[0].message).to.be('Put tag declaration on top or after import declarations.')
+    expect(messages[0].line).to.be(3)
     expect(messages[0].col).to.be(6)
-    expect(messages[0].raw).to.be('      function add() {}')
+    expect(messages[0].raw).to.be('      var tag = this;')
     expect(messages[0].type).to.be('warning')
   })
 
@@ -43,6 +43,37 @@ describe('Rules: ' + ruleId, function () {
     expect(messages[0].type).to.be('warning')
   })
 
+  it('Import sources not in order should result in an error', function () {
+    var code = `<tag><script>
+      import addMonths from 'date-fns/add_months'
+      import addDays from 'date-fns/add_days'
+    </script></tag>`
+    var messages = HTMLHint.verify(code, ruleOptions)
+    expect(messages.length).to.be(1)
+    expect(messages[0].rule.id).to.be(ruleId)
+    expect(messages[0].message).to.be('Import sources within a group must be alphabetized.')
+    expect(messages[0].line).to.be(3)
+    expect(messages[0].col).to.be(6)
+    expect(messages[0].raw).to.be("      import addDays from 'date-fns/add_days'")
+    expect(messages[0].type).to.be('warning')
+  })
+
+  it('Import sources not top should result in an error', function () {
+    var code = `<tag><script>
+      var tag = this
+      import addDays from 'date-fns/add_days'
+    </script></tag>`
+    var messages = HTMLHint.verify(code, ruleOptions)
+    expect(messages.length).to.be(1)
+    expect(messages[0].rule.id).to.be(ruleId)
+    expect(messages[0].message).to.be('Put import declarations to top.')
+    expect(messages[0].line).to.be(3)
+    expect(messages[0].col).to.be(6)
+    expect(messages[0].raw).to.be("      import addDays from 'date-fns/add_days'")
+    expect(messages[0].type).to.be('warning')
+  })
+
+
   it('Tag properties not in order should result in an error', function () {
     var code = `<tag><script>
       var tag = this
@@ -52,7 +83,7 @@ describe('Rules: ' + ruleId, function () {
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(1)
     expect(messages[0].rule.id).to.be(ruleId)
-    expect(messages[0].message).to.be('Expected tag properties to be in order.')
+    expect(messages[0].message).to.be('Tag properties must be alphabetized.')
     expect(messages[0].line).to.be(4)
     expect(messages[0].col).to.be(6)
     expect(messages[0].raw).to.be('      tag.text = \'\';')
@@ -93,7 +124,7 @@ describe('Rules: ' + ruleId, function () {
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(1)
     expect(messages[0].rule.id).to.be(ruleId)
-    expect(messages[0].message).to.be('Expected tag methods to be in order.')
+    expect(messages[0].message).to.be('Tag methods must be alphabetized.')
     expect(messages[0].line).to.be(4)
     expect(messages[0].col).to.be(6)
     expect(messages[0].raw).to.be('      tag.add = add;')
@@ -128,7 +159,7 @@ describe('Rules: ' + ruleId, function () {
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(1)
     expect(messages[0].rule.id).to.be(ruleId)
-    expect(messages[0].message).to.be('Expected declarations to be in order.')
+    expect(messages[0].message).to.be('Declarations must be alphabetized.')
     expect(messages[0].line).to.be(4)
     expect(messages[0].col).to.be(6)
     expect(messages[0].raw).to.be('      var id = 1;')
@@ -168,7 +199,7 @@ describe('Rules: ' + ruleId, function () {
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(2)
     expect(messages[0].rule.id).to.be(ruleId)
-    expect(messages[0].message).to.be('Expected properties to be in order.')
+    expect(messages[0].message).to.be('Properties must be alphabetized.')
     expect(messages[0].line).to.be(7)
     expect(messages[0].col).to.be(6)
     expect(messages[0].raw).to.be('      object.data.value = 1;')
@@ -209,7 +240,7 @@ describe('Rules: ' + ruleId, function () {
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(1)
     expect(messages[0].rule.id).to.be(ruleId)
-    expect(messages[0].message).to.be('Expected functions to be in order.')
+    expect(messages[0].message).to.be('Functions must be alphabetized.')
     expect(messages[0].line).to.be(6)
     expect(messages[0].col).to.be(6)
     expect(messages[0].raw).to.be('      function add(event) {')
@@ -218,6 +249,8 @@ describe('Rules: ' + ruleId, function () {
 
   it('Ruled script should not result in an error', function () {
     var code = `<tag><script>
+      import addDays from 'date-fns/add_days'
+      import addMonths from 'date-fns/add_months'
       var tag = this;
       tag.text = '';
       tag.todos = [];
@@ -243,6 +276,7 @@ describe('Rules: ' + ruleId, function () {
       }
     </script></tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
+    console.log(messages)
     expect(messages.length).to.be(0)
   })
 
