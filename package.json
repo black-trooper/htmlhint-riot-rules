@@ -1,6 +1,6 @@
 {
   "name": "htmlhint-riot-rules",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "HTMLHint custom rules for Riot.js",
   "main": "index.js",
   "keywords": [
