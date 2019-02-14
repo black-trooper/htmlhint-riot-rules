@@ -30,10 +30,10 @@ module.exports = {
       exclude: /node_modules/,
       options: {
         customRules: htmlhintRiotRules(),
-        'file-line-limit': 100,
+        'file-line-limit': true, // Change the limit by set numeric. 'true' meaning default size 100. 
         'tag-name-include-hyphen': true,
         'use-script-inside-tag': true,
-        'tag-expressions-simple': true,
+        'tag-expressions-simple': true, // Change the limit by set numeric. 'true' meaning default size 10. 
         'tag-options-primitive': true,
         'assign-this-to-tag': true,
         'properties-and-methods-order': true,
