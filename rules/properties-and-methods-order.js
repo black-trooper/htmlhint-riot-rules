@@ -39,10 +39,11 @@ module.exports = {
         || isTagCallExpression(body)
     }
     function isTagCallExpression(body) {
-      return body.type === 'ExpressionStatement'
-        && body.expression.type === 'CallExpression'
-        && body.expression.callee.type === 'MemberExpression'
-        && (body.expression.callee.object.name === 'tag' || body.expression.callee.object.type === 'ThisExpression')
+      if (body.type !== 'ExpressionStatement' || body.expression.type !== 'CallExpression') {
+        return false
+      }
+      const calleeObject = extractCalleeObject(body.expression.callee)
+      return calleeObject.name === 'tag' || calleeObject.type === 'ThisExpression'
     }
     function isMultiLinerTagMethod(body) {
       return body.type === 'ExpressionStatement'
@@ -79,10 +80,11 @@ module.exports = {
           || body.expression.right.type === 'ObjectExpression')
     }
     function isCallExpression(body) {
-      return body.type === 'ExpressionStatement'
-        && body.expression.type === 'CallExpression'
-        && body.expression.callee.type === 'MemberExpression'
-        && (body.expression.callee.object.name !== 'tag' && body.expression.callee.object.type !== 'ThisExpression')
+      if (body.type !== 'ExpressionStatement' || body.expression.type !== 'CallExpression') {
+        return false
+      }
+      const calleeObject = extractCalleeObject(body.expression.callee)
+      return calleeObject.name !== 'tag' && calleeObject.type !== 'ThisExpression'
     }
     function extractRaw(raw, line) {
       return raw.split(/\r\n|\r|\n/)[line - 1]
@@ -101,6 +103,12 @@ module.exports = {
         return `${extractPropertyName(target.object)}.${target.property.name}`
       }
       return target.name
+    }
+    function extractCalleeObject(target) {
+      if (target.type === 'MemberExpression') {
+        return extractCalleeObject(target.object)
+      }
+      return target
     }
     function warn(message, event, body) {
       const line = event.line + body.loc.start.line - 1

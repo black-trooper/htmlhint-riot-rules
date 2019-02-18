@@ -91,6 +91,7 @@ describe('Rules: ' + ruleId + ' with option', function () {
       this.todos = [];
       this.add = add;
       this.edit = edit;
+      this.obserbable.on('show', onShow)
       this.on('mount', onMount);
       this.toggle = toggle;
       
@@ -117,6 +118,10 @@ describe('Rules: ' + ruleId + ' with option', function () {
       }
 
       function onRouting(content) {
+          /* ... */
+      }
+
+      function onShow(event) {
           /* ... */
       }
 
