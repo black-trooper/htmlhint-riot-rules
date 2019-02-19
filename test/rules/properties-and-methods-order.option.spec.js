@@ -144,9 +144,10 @@ describe('Rules: ' + ruleId + ' with option', function () {
       tag.edit = edit;
       tag.on('mount', onMount);
       tag.toggle = toggle;
-      
+
       var id = 1, object = {}, text = '';
       const version = require('../package.json').version;
+      let visible
       id = 2;
       object.z_index = 1;
       obseriot.on('routing', onRouting);

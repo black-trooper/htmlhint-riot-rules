@@ -58,6 +58,7 @@ module.exports = {
         || body.type === 'VariableDeclaration'
         && body.declarations.length == 1
         && body.declarations[0].type === 'VariableDeclarator'
+        && body.declarations[0].init
         && (body.declarations[0].init.type === 'ArrowFunctionExpression'
           || body.declarations[0].init.type === 'FunctionExpression')
     }
