@@ -121,11 +121,11 @@ describe('Rules: ' + ruleId + ' with option', function () {
           /* ... */
       }
 
-      function onShow(event) {
+      const onShow = event => {
           /* ... */
       }
 
-      function toggle(event) {
+      const toggle = function(event) {
           /* ... */
       }
     </script></tag>`

@@ -55,9 +55,14 @@ module.exports = {
     }
     function isFunction(body) {
       return body.type === 'FunctionDeclaration'
+        || body.type === 'VariableDeclaration'
+        && body.declarations.length == 1
+        && body.declarations[0].type === 'VariableDeclarator'
+        && (body.declarations[0].init.type === 'ArrowFunctionExpression'
+          || body.declarations[0].init.type === 'FunctionExpression')
     }
     function isVariable(body) {
-      return body.type === 'VariableDeclaration' && !isAssignThisToTag(body)
+      return body.type === 'VariableDeclaration' && !isAssignThisToTag(body) && !isFunction(body)
     }
     function isProperty(body) {
       return isIdentifierProperty(body) || isMemberProperty(body) || isCallExpression(body)
@@ -85,6 +90,7 @@ module.exports = {
       }
       const calleeObject = extractCalleeObject(body.expression.callee)
       return calleeObject.name !== 'tag' && calleeObject.type !== 'ThisExpression'
+        && (body.expression.callee.object.name !== 'tag' && body.expression.callee.object.type !== 'ThisExpression')
     }
     function extractRaw(raw, line) {
       return raw.split(/\r\n|\r|\n/)[line - 1]
