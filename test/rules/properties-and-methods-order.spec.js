@@ -251,6 +251,7 @@ describe('Rules: ' + ruleId, function () {
     var code = `<tag><script>
       import addDays from 'date-fns/add_days'
       import addMonths from 'date-fns/add_months'
+      this.mode = opts.mode != null
       this.text = '';
       this.todos = [];
       this.add = add;
@@ -297,6 +298,7 @@ describe('Rules: ' + ruleId, function () {
       import addDays from 'date-fns/add_days'
       import addMonths from 'date-fns/add_months'
       var tag = this;
+      tag.mode = opts.mode != null
       tag.text = '';
       tag.todos = [];
       tag.add = add;
