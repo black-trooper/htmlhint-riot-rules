@@ -19,9 +19,9 @@ module.exports = {
           })
       })
     }
-    function hasThisToken(code) {
+    function getThisTokens(code) {
       const tokens = esprima.tokenize(code)
-      return tokens.some(token => token.type === 'Keyword' && token.value === 'this')
+      return tokens.filter(token => token.type === 'Keyword' && token.value === 'this')
     }
     function isUseThisOnTopLevel(ast) {
       return ast.body.some(body => {
@@ -38,14 +38,17 @@ module.exports = {
         return
       }
       const code = event.raw.replace(/\t/g, ' ');
-      if (!hasThisToken(code)) {
+      const thisCount = getThisTokens(code).length
+      if (thisCount == 0) {
         return
       }
       const ast = esprima.parseModule(code)
       if (ast.type !== 'Program') {
         return
       }
-      if (options.force || !isAssignThisToTag(ast, options.name) || isUseThisOnTopLevel(ast)) {
+      if (options.force && isAssignThisToTag(ast, options.name) && thisCount > 1
+        || !isAssignThisToTag(ast, options.name)
+        || isUseThisOnTopLevel(ast)) {
         reporter.warn('Assign this to tag.', event.line, event.col, self, event.raw);
       }
     });
