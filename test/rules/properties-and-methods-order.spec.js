@@ -301,6 +301,7 @@ describe('Rules: ' + ruleId, function () {
       tag.mode = opts.mode != null
       tag.text = '';
       tag.todos = [];
+      tag.user_id = opts.userId;
       tag.add = add;
       tag.edit = edit;
       tag.on('mount', onMount);

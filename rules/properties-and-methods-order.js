@@ -26,11 +26,7 @@ module.exports = {
         && body.expression.type === 'AssignmentExpression'
         && body.expression.left.type === 'MemberExpression'
         && (body.expression.left.object.name === 'tag' || body.expression.left.object.type === 'ThisExpression')
-        && (body.expression.right.type === 'Literal'
-          || body.expression.right.type === 'ArrayExpression'
-          || body.expression.right.type === 'LogicalExpression'
-          || body.expression.right.type === 'BinaryExpression'
-          || body.expression.right.type === 'ObjectExpression')
+        && !isTagMethod(body)
     }
     function isTagMethod(body) {
       return body.type === 'ExpressionStatement'
