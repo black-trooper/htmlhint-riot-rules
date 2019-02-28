@@ -84,6 +84,16 @@ module.exports = {
       const calleeObject = extractCalleeObject(body.expression.callee)
       return calleeObject.name !== 'tag' && calleeObject.type !== 'ThisExpression'
     }
+    function getTypeName(body) {
+      if (isImport(body)) return 'Import'
+      if (isAssignThisToTag(body)) return 'AssignThisToTag'
+      if (isTagProperty(body)) return 'TagProperty'
+      if (isTagMethod(body)) return 'TagMethod'
+      if (isVariable(body)) return 'Variable'
+      if (isProperty(body)) return 'Property'
+      if (isFunction(body)) return 'Function'
+      return 'other'
+    }
     function extractRaw(raw, line) {
       return raw.split(/\r\n|\r|\n/)[line - 1]
     }
@@ -148,13 +158,13 @@ module.exports = {
             }
           }
           else {
-            warn('Put import declarations to top.', event, body);
+            warn(`Put import declarations to top. Before type is ${getTypeName(last)}`, event, body);
           }
         }
 
         else if (isAssignThisToTag(body)) {
           if (!isImport(last)) {
-            warn('Put tag declaration on top or after import declarations.', event, body);
+            warn(`Put tag declaration on top or after import declarations. Before type is ${getTypeName(last)}`, event, body);
           }
         }
 
@@ -166,7 +176,7 @@ module.exports = {
             }
           }
           else if (!isAssignThisToTag(last) && !isImport(last)) {
-            warn('Put tag properties after tag declaration.', event, body);
+            warn(`Put tag properties after tag declaration. Before type is ${getTypeName(last)}`, event, body);
           }
         }
 
@@ -178,7 +188,7 @@ module.exports = {
             }
           }
           else if (!isTagProperty(last) && !isAssignThisToTag(last)) {
-            warn('Put tag methods after tag declaration and tag properties.', event, body);
+            warn(`Put tag methods after tag declaration and tag properties. Before type is ${getTypeName(last)}`, event, body);
           }
         }
 
@@ -190,7 +200,7 @@ module.exports = {
             }
           }
           else if (!isTagMethod(last) && !isTagProperty(last) && !isAssignThisToTag(last)) {
-            warn('Put declarations after tag properties and tag methods.', event, body);
+            warn(`Put declarations after tag properties and tag methods. Before type is ${getTypeName(last)}`, event, body);
           }
         }
 
@@ -205,7 +215,7 @@ module.exports = {
           }
           else if (!isVariable(last) && !isTagMethod(last) && !isTagProperty(last)
             && !isAssignThisToTag(last)) {
-            warn('Put properties after declarations.', event, body);
+            warn(`Put properties after declarations. Before type is ${getTypeName(last)}`, event, body);
           }
         }
 
