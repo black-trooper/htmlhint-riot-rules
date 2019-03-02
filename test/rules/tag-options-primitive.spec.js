@@ -55,6 +55,7 @@ describe('Rules: ' + ruleId, function () {
       let id = opts.id
       let text = ''
       let name = text
+      let lastText
       const version = require('../package.json').version;
       this.id = opts.id
       this.text = ''
