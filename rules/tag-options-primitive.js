@@ -22,6 +22,7 @@ module.exports = {
       }
       return body.declarations.filter(declaration => {
         return declaration.type === 'VariableDeclarator'
+          && declaration.init
           && declaration.init.type === 'MemberExpression'
       }).some(declaration => {
         const propertyName = extractPropertyName(declaration.init)
