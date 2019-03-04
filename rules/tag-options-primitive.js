@@ -6,37 +6,22 @@ module.exports = {
   description: 'Keep tag options primitive.',
   init: function (parser, reporter) {
     var self = this;
-    var regex = /\{.*opts\..*\..*?\}/;
-    function isAssignTagProperty(body) {
-      if (body.type === 'ExpressionStatement'
-        && body.expression.type === 'AssignmentExpression'
-        && body.expression.right.type === 'MemberExpression') {
-        const propertyName = extractPropertyName(body.expression.right)
-        return propertyName.startsWith('opts') && propertyName.split('.').length > 2
-      }
-      return false
-    }
-    function isAssignProperty(body) {
-      if (body.type !== 'VariableDeclaration') {
-        return false
-      }
-      return body.declarations.filter(declaration => {
-        return declaration.type === 'VariableDeclarator'
-          && declaration.init
-          && declaration.init.type === 'MemberExpression'
-      }).some(declaration => {
-        const propertyName = extractPropertyName(declaration.init)
-        return propertyName.startsWith('opts') && propertyName.split('.').length > 2
-      })
-    }
-    function extractPropertyName(target) {
-      if (target.object.type === 'CallExpression') {
-        return ''
-      }
-      if (target.object.type === 'Identifier') {
-        return `${target.object.name}.${target.property.name}`
-      }
-      return `${extractPropertyName(target.object)}.${target.property.name}`
+    // RegExp Lookbehind Assertions. requires Node.js 9.11.2 or later
+    const regex = /(?<!\\){.*?[^\\]}/g;
+    function isNotPrimitiveOption(body) {
+      let flg = false
+      JSON.parse(JSON.stringify(body), (key, value) => {
+        if (key == 'object'
+          && value.type && value.type == 'MemberExpression'
+          && value.object
+          && value.object.type && value.object.type == 'Identifier'
+          && value.object.name && value.object.name == 'opts'
+        ) {
+          flg = true
+        }
+        return value;
+      });
+      return flg
     }
     function warn(message, event, body) {
       const line = event.line + body.loc.start.line - 1
@@ -54,13 +39,31 @@ module.exports = {
       for (var i = 0, l = attrs.length; i < l; i++) {
         attr = attrs[i];
 
-        if (regex.test(attr.value) === true) {
+        const expressions = attr.value.match(regex)
+        if (!expressions) {
+          continue
+        }
+        const flg = expressions.some(expression => {
+          const code = expression.replace('\{', '').replace('\}', '')
+          const ast = esprima.parseModule(code)
+          return isNotPrimitiveOption(ast.body)
+        })
+        if (flg) {
           reporter.warn('The attribute [ ' + attr.name + ' ] keep tag options primitive.', event.line, col + attr.index, self, attr.raw);
         }
       }
     });
     parser.addListener('text', function (event) {
-      if (regex.test(event.raw) === true) {
+      const expressions = event.raw.match(regex)
+      if (!expressions) {
+        return
+      }
+      const flg = expressions.some(expression => {
+        const code = expression.replace('\{', '').replace('\}', '')
+        const ast = esprima.parseModule(code)
+        return isNotPrimitiveOption(ast.body)
+      })
+      if (flg) {
         reporter.warn('Keep tag options primitive.', event.line, event.col, self, event.raw);
       }
     });
@@ -76,7 +79,8 @@ module.exports = {
       if (ast.body.length === 0) {
         return
       }
-      ast.body.filter(body => isAssignTagProperty(body) || isAssignProperty(body)).forEach(body => {
+
+      ast.body.filter(body => isNotPrimitiveOption(body)).forEach(body => {
         warn('Keep tag options primitive.', event, body);
       })
     });
