@@ -1,5 +1,6 @@
 const id = 'tag-options-primitive';
 const esprima = require('esprima');
+const reserved = require('reserved-words')
 
 module.exports = {
   id,
@@ -44,7 +45,15 @@ module.exports = {
           continue
         }
         const flg = expressions.some(expression => {
-          const code = expression.replace('\{', '').replace('\}', '')
+          let code = expression.replace('\{', '').replace('\}', '')
+          if (code.indexOf('opts.') < 0) {
+            return false
+          }
+          // escape reserved word
+          Object.keys(reserved.KEYWORDS['3']).forEach(key => {
+            code = code.replace(new RegExp(key, 'g'), `_${key}`)
+          })
+
           const ast = esprima.parseModule(code)
           return isNotPrimitiveOption(ast.body)
         })
