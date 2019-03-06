@@ -70,7 +70,7 @@ describe('Rules: ' + ruleId, function () {
   it('Add primitive option to attribute value should not result in an error', function () {
     var code = `<tag>
       <p value="{ opts.id }" class="default"></p>
-      <p value="{ opts.id}{opts.name }"></p>
+      <p value="{ opts.id}{opts.name }" class="{ default: opts.class }"></p>
       <p value="{ opts.id+opts.name }"></p>
       <p value="{ opts.id}{name[0]}"></p>
       <p value="{ opts.id+name[0] }"></p>
@@ -80,7 +80,11 @@ describe('Rules: ' + ruleId, function () {
   })
 
   it('Add primitive option to text should not result in an error', function () {
-    var code = '<tag><p>{ opts.id }</p><script></script></tag>'
+    var code = `<tag>
+      <p>{ opts.id }</p>
+      <p>{ name[0] }</p>
+      <script></script>
+    </tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(0)
   })

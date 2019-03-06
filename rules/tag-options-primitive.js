@@ -68,7 +68,14 @@ module.exports = {
         return
       }
       const flg = expressions.some(expression => {
-        const code = expression.replace('\{', '').replace('\}', '')
+        let code = expression.replace('\{', '').replace('\}', '')
+        if (code.indexOf('opts.') < 0) {
+          return false
+        }
+        // escape reserved word
+        Object.keys(reserved.KEYWORDS['3']).forEach(key => {
+          code = code.replace(new RegExp(key, 'g'), `_${key}`)
+        })
         const ast = esprima.parseModule(code)
         return isNotPrimitiveOption(ast.body)
       })
@@ -81,6 +88,9 @@ module.exports = {
         return
       }
       const code = event.raw.replace(/\t/g, ' ');
+      if (code.indexOf('opts.') < 0) {
+        return
+      }
       const ast = esprima.parseModule(code, { loc: true })
       if (ast.type !== 'Program') {
         return
