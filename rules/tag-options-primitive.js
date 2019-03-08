@@ -53,6 +53,9 @@ module.exports = {
           Object.keys(reserved.KEYWORDS['3']).forEach(key => {
             code = code.replace(new RegExp(key, 'g'), `_${key}`)
           })
+          if (attr.name == 'each') {
+            code = code.replace(/_in/g, "in")
+          }
 
           const ast = esprima.parseModule(code)
           return isNotPrimitiveOption(ast.body)

@@ -74,6 +74,7 @@ describe('Rules: ' + ruleId, function () {
       <p value="{ opts.id+opts.name }"></p>
       <p value="{ opts.id}{name[0]}"></p>
       <p value="{ opts.id+name[0] }"></p>
+      <a each="{item in opts.items}">  </a>
     </tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(0)
