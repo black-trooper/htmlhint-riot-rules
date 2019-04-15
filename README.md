@@ -59,6 +59,29 @@ gulp.src("./src/*.tag.html")
   .pipe(htmlhint('.htmlhintrc', htmlhintRiotRules()))
 ```
 
+### CLI
+
+`.htmlhintrc`
+
+```json
+{
+  "file-line-limit": true,
+  "tag-name-include-hyphen": true,
+  "use-script-inside-tag": true,
+  "tag-expressions-simple": true,
+  "tag-options-primitive": true,
+  "assign-this-to-tag": true,
+  "properties-and-methods-order": true,
+  "fake-es6-syntax-disabled": true,
+  "tag-parent-disabled": true,
+  "use-each-in-syntax": true
+}
+```
+
+```
+htmlhint --config .htmlhintrc --rulesdir ./node_modules/htmlhint-riot-rules/add_rules **/*.tag.html 
+```
+
 ## Rules
 |ID|Description|Level|
 |--|-----------|-----|
