@@ -1,5 +1,5 @@
 const id = 'fake-es6-syntax-disabled'
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 
 module.exports = {
   id,

@@ -1,5 +1,5 @@
 const id = 'harness-your-tag-options'
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 
 module.exports = {
   id,

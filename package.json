@@ -32,7 +32,7 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
-    "esprima": "^4.0.1",
+    "esprima-next": "^5.2.2",
     "reserved-words": "^0.1.2"
   }
 }

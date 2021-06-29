@@ -1,5 +1,5 @@
 const id = 'tag-options-primitive';
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 const reserved = require('reserved-words')
 
 module.exports = {

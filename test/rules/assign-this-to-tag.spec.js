@@ -70,7 +70,10 @@ describe('Rules: ' + ruleId, function () {
     expect(messages.length).to.be(0)
   })
   it('None this should not result in an error', function () {
-    var code = '<tag><script></script></tag>'
+    var code = `<tag><script>
+        const foo = undefined;
+        const value = foo?.bar;
+    </script></tag>`
     var messages = HTMLHint.verify(code, ruleOptions)
     expect(messages.length).to.be(0)
   })

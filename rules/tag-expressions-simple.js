@@ -1,5 +1,5 @@
 const id = 'tag-expressions-simple';
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 
 module.exports = {
   id,

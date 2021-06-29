@@ -1,5 +1,5 @@
 const id = 'properties-and-methods-order'
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 
 module.exports = {
   id,

@@ -1,5 +1,5 @@
 const id = 'assign-this-to-tag'
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 
 module.exports = {
   id,
